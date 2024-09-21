@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página de Pedidos</title>
+    <title>Pantalla Principal</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,201 +14,50 @@
 
         .container {
             width: 90%;
-            max-width: 600px;
-            margin: 50px auto;
+            max-width: 400px;
+            margin: 100px auto;
             padding: 20px;
             background: white;
             border-radius: 5px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
 
         h1 {
-            text-align: center;
             color: #333;
         }
 
-        .form-container {
+        .button-container {
             display: flex;
             flex-direction: column;
         }
 
-        .form {
-            display: none;
-            margin-top: 20px;
-        }
-
-        .form h2 {
-            text-align: center;
-            color: #333;
-        }
-
-        .form label {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .form input {
-            width: 100%;
+        .button-container button {
             padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .form button {
-            width: 100%;
-            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            color: white;
             background-color: #5cb85c;
             border: none;
             border-radius: 5px;
-            color: white;
-            font-size: 16px;
+            cursor: pointer;
         }
 
-        .form p {
-            text-align: center;
-        }
-
-        #login-form {
-            display: block;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .error-message {
-            color: red;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .success-message {
-            color: green;
-            text-align: center;
-            margin-bottom: 10px;
+        .button-container button:hover {
+            background-color: #4cae4c;
         }
     </style>
 </head>
 <body>
+
 <div class="container">
-    <h1>Bienvenido a nuestra Tienda</h1>
-
-    <!-- Mensajes de error o éxito -->
-    <div id="message" class="error-message hidden"></div>
-
-    <div class="form-container">
-        <div class="form" id="login-form">
-            <h2>Iniciar Sesión</h2>
-            <form id="loginForm">
-                <label for="login-email">Correo Electrónico:</label>
-                <input type="email" id="login-email" required>
-
-                <label for="login-password">Contraseña:</label>
-                <input type="password" id="login-password" required>
-
-                <button type="submit">Iniciar Sesión</button>
-            </form>
-            <p>No tienes una cuenta? <a href="#" onclick="toggleForms()">Regístrate aquí</a></p>
-        </div>
-
-        <div class="form hidden" id="register-form">
-            <h2>Registro</h2>
-            <form id="registerForm">
-                <label for="register-email">Correo Electrónico:</label>
-                <input type="email" id="register-email" required>
-
-                <label for="register-password">Contraseña:</label>
-                <input type="password" id="register-password" required>
-
-                <label for="register-confirm-password">Confirmar Contraseña:</label>
-                <input type="password" id="register-confirm-password" required>
-
-                <button type="submit">Registrarse</button>
-            </form>
-            <p>Ya tienes una cuenta? <a href="#" onclick="toggleForms()">Inicia sesión aquí</a></p>
-        </div>
+    <h1>Bienvenido</h1>
+    <p>Elige una opción para continuar</p>
+    <div class="button-container">
+        <button onclick="location.href='login.html'">Iniciar Sesión</button>
+        <button onclick="location.href='register.html'">Registrarse</button>
     </div>
 </div>
 
-<script>
-    const messageDiv = document.getElementById('message');
-
-    // Alterna entre formularios de inicio de sesión y registro
-    function toggleForms() {
-        const loginForm = document.getElementById('login-form');
-        const registerForm = document.getElementById('register-form');
-        loginForm.classList.toggle('hidden');
-        registerForm.classList.toggle('hidden');
-        messageDiv.classList.add('hidden');
-    }
-
-    // Función para mostrar mensajes de error o éxito
-    function showMessage(type, text) {
-        messageDiv.classList.remove('hidden');
-        messageDiv.classList.remove('error-message', 'success-message');
-        messageDiv.classList.add(type === 'success' ? 'success-message' : 'error-message');
-        messageDiv.textContent = text;
-    }
-
-    // Manejo del formulario de inicio de sesión
-    document.getElementById('loginForm').addEventListener('submit', async function (event) {
-        event.preventDefault();
-
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-
-        try {
-            const response = await fetch('/api/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ correoUsuario: email, password: password }),
-            });
-
-            if (response.ok) {
-                showMessage('success', 'Inicio de sesión exitoso');
-            } else {
-                showMessage('error', 'Credenciales inválidas');
-            }
-        } catch (error) {
-            showMessage('error', 'Error en la conexión');
-        }
-    });
-
-    // Manejo del formulario de registro
-    document.getElementById('registerForm').addEventListener('submit', async function (event) {
-        event.preventDefault();
-
-        const email = document.getElementById('register-email').value;
-        const password = document.getElementById('register-password').value;
-        const confirmPassword = document.getElementById('register-confirm-password').value;
-
-        if (password !== confirmPassword) {
-            showMessage('error', 'Las contraseñas no coinciden');
-            return;
-        }
-
-        try {
-            const response = await fetch('/api/auth/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ correoUsuario: email, password: password }),
-            });
-
-            if (response.ok) {
-                showMessage('success', 'Registro exitoso');
-            } else {
-                const errorData = await response.json();
-                showMessage('error', errorData.message || 'Error en el registro');
-            }
-        } catch (error) {
-            showMessage('error', 'Error en la conexión');
-        }
-    });
-</script>
 </body>
 </html>
