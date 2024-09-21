@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+//ESTO ES SOLO UNA PRUEBA Y UN EJEMPLO
 
 @RestController
 public class GreetingController {
