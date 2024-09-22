@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Productos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .welcome {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logout-button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            background-color: #d9534f;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .cart {
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #e7f1ff;
+            border: 1px solid #b3d7ff;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #f9f9f9;
+        }
+
+        .product {
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .product:hover {
+            background-color: #f1f1f1;
+        }
+
+        .error-message, .success-message {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .error-message {
+            color: red;
+        }
+
+        .success-message {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Catálogo de Productos</h1>
+
+    <!-- Mostrar el nombre del usuario -->
+    <div class="welcome" id="welcome-message">
+        <h2 id="username"></h2>
+        <button class="logout-button" id="logout-button">Cerrar Sesión</button>
+    </div>
+
+    <div class="cart">
+        <h3>Carrito</h3>
+        <ul id="cart-items"></ul>
+    </div>
+
+    <div id="message" class="error-message hidden"></div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Nombre del Producto</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+        </tr>
+        </thead>
+        <tbody id="product-list">
+        <!-- Los productos se agregarán aquí dinámicamente -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    async function getUsuario() {
+        try {
+            const response = await fetch('/api/user');
+            if (response.ok) {
+                const usuario = await response.json();
+                document.getElementById('username').textContent = `Bienvenido, ${usuario.nombre}`; // Suponiendo que 'nombre' es un atributo de Usuario
+            } else {
+                console.error('Error al obtener el usuario');
+            }
+        } catch (error) {
+            console.error('Error en la conexión:', error);
+        }
+    }
+
+    // Llama a la función para obtener el usuario cuando se carga la página
+    getUsuario();
+
+
+</script>
+</body>
+</html>
