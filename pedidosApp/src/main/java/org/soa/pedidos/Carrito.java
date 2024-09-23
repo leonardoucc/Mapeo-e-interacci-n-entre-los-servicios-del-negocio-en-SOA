@@ -26,6 +26,7 @@ public class Carrito {
         }
     }
 
+
     public void vaciarCarrito() {
         productos.clear();
         System.out.println("El carrito ha sido vaciado.");
