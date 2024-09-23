@@ -13,7 +13,10 @@ public class UserService {
 
     public Usuario registerUser(Usuario user) {
         // Implementa la lógica para registrar al usuario (asegúrate de encriptar la contraseña)
-        return usuarioRepository.save(user);
+        if(!userExists(user.getCorreoUsuario())) {
+            return usuarioRepository.save(user);
+        }
+        return null;
     }
 
     public Usuario loginUser(String correoUsuario, String password) {
@@ -25,5 +28,10 @@ public class UserService {
             return user;  // Login exitoso
         }
         return null;  // Credenciales inválidas
+    }
+
+    // Método para verificar si un usuario ya existe
+    public boolean userExists(String correoUsuario) {
+        return usuarioRepository.findByEmail(correoUsuario) != null;
     }
 }
