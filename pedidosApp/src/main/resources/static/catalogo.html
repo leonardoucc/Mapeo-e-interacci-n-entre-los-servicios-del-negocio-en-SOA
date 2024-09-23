@@ -88,6 +88,24 @@
         .success-message {
             color: green;
         }
+
+        .btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        .btn-add {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-remove {
+            background-color: #dc3545;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -113,6 +131,7 @@
             <th>Nombre del Producto</th>
             <th>Precio</th>
             <th>Cantidad</th>
+            <th>Acciones</th>
         </tr>
         </thead>
         <tbody id="product-list">
@@ -122,12 +141,80 @@
 </div>
 
 <script>
+    // Simulando algunos productos (esto normalmente vendría de una API)
+    const productos = [
+        { id: 1, nombre: 'Producto 1', precio: 100, cantidad: 10 },
+        { id: 2, nombre: 'Producto 2', precio: 200, cantidad: 5 },
+        { id: 3, nombre: 'Producto 3', precio: 150, cantidad: 8 }
+    ];
+
+    let carrito = [];
+
+    function renderProductos() {
+        const productList = document.getElementById('product-list');
+        productList.innerHTML = '';
+
+        productos.forEach(producto => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${producto.nombre}</td>
+                <td>$${producto.precio}</td>
+                <td>${producto.cantidad}</td>
+                <td>
+                    <button class="btn btn-add" onclick="agregarAlCarrito(${producto.id})">Agregar al carrito</button>
+                    <button class="btn btn-remove" onclick="eliminarProducto(${producto.id})">Eliminar producto</button>
+                </td>
+            `;
+            productList.appendChild(row);
+        });
+    }
+
+    function renderCarrito() {
+        const cartItems = document.getElementById('cart-items');
+        cartItems.innerHTML = '';
+
+        carrito.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = `${item.nombre} - ${item.cantidad} unidad(es)`;
+            cartItems.appendChild(li);
+        });
+    }
+
+    function agregarAlCarrito(productId) {
+        const producto = productos.find(p => p.id === productId);
+        const itemEnCarrito = carrito.find(item => item.id === productId);
+
+        if (itemEnCarrito) {
+            itemEnCarrito.cantidad++;
+        } else {
+            carrito.push({ ...producto, cantidad: 1 });
+        }
+
+        renderCarrito();
+    }
+
+    function eliminarProducto(productId) {
+        carrito = carrito.filter(item => item.id !== productId);
+        renderCarrito();
+    }
+
+    // Inicializar la página
+    document.addEventListener('DOMContentLoaded', function() {
+        getUsuario();
+        renderProductos();
+    });
+
+    // Obtener usuario (mismo código que ya tenías)
     async function getUsuario() {
         try {
             const response = await fetch('/api/user');
             if (response.ok) {
                 const usuario = await response.json();
-                document.getElementById('username').textContent = `Bienvenido, ${usuario.nombre}`; // Suponiendo que 'nombre' es un atributo de Usuario
+                if (usuario) {
+                    document.getElementById('username').textContent = `Bienvenido, ${usuario.nombreUsuario}`;
+                } else {
+                    document.getElementById('username').textContent = 'Por favor, inicia sesión.';
+                }
             } else {
                 console.error('Error al obtener el usuario');
             }
@@ -135,11 +222,6 @@
             console.error('Error en la conexión:', error);
         }
     }
-
-    // Llama a la función para obtener el usuario cuando se carga la página
-    getUsuario();
-
-
 </script>
 </body>
 </html>
